@@ -1,0 +1,18 @@
+body{
+    background-color: #101010;
+}
+
+.container{
+    height: 100%;
+    width: 90%;
+    background-color: white;
+    padding: 60px;
+}
+
+.contol-label{
+    text-align: left;
+}
+
+.notie-container {
+    background-color: #269abc;
+}
