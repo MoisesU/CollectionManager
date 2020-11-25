@@ -29,6 +29,7 @@ public class MainService {
         return "Hola mundo desde un Rest Service";
     }
     
+    //Srervicio para agregar una nueva figura a  la base de datos
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -44,6 +45,7 @@ public class MainService {
         return "{\"status\":"+resp+", \"figura\":\""+f.getSerial()+" "+f.getPersonaje()+"\"}";
     }
     
+    //Servicio para obtener las opciones de la base de datos, como la marca, la serie, entre otros
     @GET
     @Path("/presets")
     @Produces({MediaType.APPLICATION_JSON})
@@ -54,5 +56,17 @@ public class MainService {
         String resp = db.get(db.DETAILS, "ID_DET, PREFIX, SHORT", "WHERE ID_DET <8");
         resp += ", " + db.get(db.DETAILS, "ID_DET AS ID, SERIE", "WHERE PREFIX LIKE 'SS-'");
         return "{"+resp+"}";
+    }
+    
+    //Servicio para obtener las estadísticas de la coleccion
+    @GET
+    @Path("/statistics")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getStats(){
+        //JSONObject resp = new JSONObject();
+        DataBaseControl db = new DataBaseControl(); 
+        //resp.put("series", new JSONObject(db.get(db.DETAILS, "ID_DET, SHORT, PREFIX", "")));
+        String resp = db.get2(db.COLLECT_FIG, "TOP 5 C.ID_FIG, C.FECHA_ADQ, F.NOM_FIG, F.SUB_NOM, F.SERIAL, F.FACCION, F.IMG_FIG", "ORDER BY C.FECHA_ADQ DESC");
+        return "{\"recent\":"+resp+"}";
     }
 }

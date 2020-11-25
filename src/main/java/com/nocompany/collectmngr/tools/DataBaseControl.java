@@ -19,6 +19,7 @@ public class DataBaseControl{
     public final String DETAILS = "DETAILS";
     public final String FIGS = "FIGURAS";
     public final String COLLECT = "COLECCION";
+    public final String COLLECT_FIG = "COLECCION C INNER JOIN FIGURAS F ON C.ID_FIG = F.ID_FIG";
     
     public DataBaseControl(){
         this.l = new Linker(this.SERVER, this.DATABASE);
@@ -45,6 +46,11 @@ public class DataBaseControl{
         return toJSONString(l.selectColumns(query));
     }
     
+    public String get2(String table, String data, String where){
+        String query = "SELECT "+data+" FROM "+table+" "+where;
+        return toJSONString(l.selectWithHeaders(query));
+    }
+    
     public String get(String table, String data){
         String query = "SELECT "+data+" FROM "+table;
         return toJSONString(l.selectColumns(query));
@@ -66,15 +72,28 @@ public class DataBaseControl{
         return res;
     }
     
-    /*public static void main (String... args){
-        DataBaseControl db = new DataBaseControl();
-        List<String[]> l = db.l.selectWithHeaders("SELECT * FROM DETAILS");
-        for(String [] s: l){
-            for(String s1 : s){
-                System.out.print(s1+"\t");
+    private String toJSONString(List<String[]> list) {
+        String res = "[";
+        String[] head = list.remove(0);
+        for(Iterator<String[]> i = list.iterator(); i.hasNext();){
+            String[] current = i.next();
+            res += "{";
+            for (int j = 0; j < current.length; j++) {
+                res += "\""+head[j]+"\":\""+current[j]+"\"";
+                if(j<current.length-1){
+                    res += ", ";
+                }
             }
-            System.out.print("\n");
+            res += "}";
+            if(i.hasNext()){
+                res += ", ";
+            }
         }
-        System.out.println(db.get(db.DETAILS, "ID_DET, PREFIX, SHORT", "WHERE PREFIX NOT LIKE 'SS-'"));
-    }*/
+        return res+"]";
+    }
+    
+    public static void main (String... args){
+        DataBaseControl db = new DataBaseControl();
+        System.out.println("\"recent\"="+db.get2(db.COLLECT_FIG, "TOP 5 C.ID_FIG, C.FECHA_ADQ, F.NOM_FIG, F.SUB_NOM, F.SERIAL, F.FACCION", "ORDER BY C.FECHA_ADQ DESC"));
+    }
 }
