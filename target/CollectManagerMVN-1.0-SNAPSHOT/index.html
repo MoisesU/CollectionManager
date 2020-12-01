@@ -21,10 +21,9 @@ and open the template in the editor.
             function drawChart() {
                 // Create the data table.
                 var data = new google.visualization.DataTable();
-                $.ajax({ url: 'rservices/figs/statistics',method: 'GET',dataType:'json'})
+                $.ajax({ url: 'rservices/figs/graphics',method: 'GET',dataType:'json'})
                 .done(function(json){
                     chart = json["purchases"];
-                    console.log("exito");
                     let month = ["Meses", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
@@ -32,12 +31,11 @@ and open the template in the editor.
                     data.addColumn('number', 'Monto');
                     //console.log(chart);
                     for(let i in chart){
-                        console.log("chart: " + [month[chart[i]["MES"]], Number(chart[i]["MONTO"])]);
                         data.addRow([month[chart[i]["MES"]],  Number(chart[i]["MONTO"])]);
                     }
 
                     // Set chart options
-                    var options = {'title':'Gastos por mes',
+                    var options = {'title':'Compras por mes',
                                    'width':600,
                                    'height':520};
 
@@ -81,7 +79,7 @@ and open the template in the editor.
         
         
         <div class="container">
-            <div class="jumbotron bg-primary" id="total">
+            <div class="jumbotron" id="total">
             </div>
             <hr>
             <br>
@@ -97,7 +95,51 @@ and open the template in the editor.
             <div class="row">
                 <div id="chart_div"></div>
             </div>
+            <br>
+            <h1>Compras por mes</h1>
+            <hr>
+            <br>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                              <th scope="col">ID</th>
+                              <th scope="col">Figura</th>
+                              <th scope="col">Precio</th>
+                              <th scope="col">Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tpmcontent">
+                            <tr>
+                              <th scope="row">1</th>
+                              <td>Mark</td>
+                              <td>Otto</td>
+                              <td>@mdo</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">2</th>
+                              <td>Jacob</td>
+                              <td>Thornton</td>
+                              <td>@fat</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">3</th>
+                              <td>Larry</td>
+                              <td>the Bird</td>
+                              <td>@twitter</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <script src="https://unpkg.com/notie"></script>
+        <br><br>
+        <footer>
+            <h4>Some options</h4>
+            <br>
+            <h5>Created by Mois&eacute;s Ulises Rodr&iacute;guez Montiel &copy; 2020</h5> 
+        </footer>
+        <script src="https://unpkg.com/notie"></script>        
     </body>
 </html>

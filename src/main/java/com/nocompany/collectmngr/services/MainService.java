@@ -67,10 +67,19 @@ public class MainService {
         //JSONObject resp = new JSONObject();
         DataBaseControl db = new DataBaseControl(); 
         //resp.put("series", new JSONObject(db.get(db.DETAILS, "ID_DET, SHORT, PREFIX", "")));
-        String recents = db.get2(db.COLLECT_FIG, "TOP 5 C.ID_FIG, C.FECHA_ADQ, F.NOM_FIG, F.SUB_NOM, F.SERIAL, F.FACCION, F.IMG_FIG", "ORDER BY C.FECHA_ADQ DESC");
+        String recents = "\"recent\":"+db.get2(db.COLLECT_FIG, "TOP 5 C.ID_FIG, C.FECHA_ADQ, F.NOM_FIG, F.SUB_NOM, F.SERIAL, F.FACCION, F.IMG_FIG", "ORDER BY C.FECHA_ADQ DESC");
         String presets = db.getTotals();
-        presets += ", \"purchases\":" + db.get2(db.COLLECT, "MONTH(FECHA_ADQ) AS MES, SUM(PRECIO) AS 'MONTO'", "WHERE YEAR(FECHA_ADQ) = 2020 GROUP BY MONTH(FECHA_ADQ)");
-        
-        return "{\"recent\":"+recents+", "+presets+"}";
+        String table = "\"tmonths\":"+db.getData(db.PURCHASES_PER_MONTH);
+        return "{"+recents+", "+presets+", "+table+"}";
+    }
+    
+    //Servicio para obtener la información de las gráficas
+    @GET
+    @Path("/graphics")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getGraphicsData(){
+        DataBaseControl db = new DataBaseControl(); 
+        String presets = db.getData(db.AMOUNT_PER_MONTH);
+        return "{\"purchases\":"+presets+"}";
     }
 }

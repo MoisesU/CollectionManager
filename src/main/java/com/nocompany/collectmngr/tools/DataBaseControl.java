@@ -63,6 +63,28 @@ public class DataBaseControl{
         return toJSONString(l.selectColumns(query));
     }
     
+    public String getData(){
+        String query = "SELECT MONTH(X.FECHA_ADQ) AS MES, SUM(X.PRECIO) AS 'MONTO' FROM (SELECT DISTINCT(SERIAL), "
+                + "PRECIO, FECHA_ADQ FROM FIGURAS F INNER JOIN COLECCION C ON F.ID_FIG = C.ID_FIG WHERE YEAR(FECHA_ADQ) = 2020) "
+                + "X GROUP BY MONTH(X.FECHA_ADQ)";
+        return toJSONString(l.selectWithHeaders(query));
+    }
+    
+    public final int PURCHASES_PER_MONTH = 1;
+    public final int AMOUNT_PER_MONTH = 0;
+    
+    
+    public String getData(int value){
+        String [] querys = {
+            "SELECT MONTH(X.FECHA_ADQ) AS MES, SUM(X.PRECIO) AS 'MONTO' FROM (SELECT DISTINCT(SERIAL), PRECIO, FECHA_ADQ "
+                + "FROM FIGURAS F INNER JOIN COLECCION C ON F.ID_FIG = C.ID_FIG WHERE YEAR(FECHA_ADQ) = YEAR(GETDATE())) X GROUP BY MONTH(X.FECHA_ADQ)",
+            "SELECT MONTH(C.FECHA_ADQ) AS 'mes', F.SERIAL AS 'serial', CONCAT(F.SUB_NOM,' ',F.NOM_FIG) AS 'figura', DAY(C.FECHA_ADQ) AS 'dia', C.PRECIO AS 'precio' "
+                + "FROM FIGURAS F INNER JOIN COLECCION C ON F.ID_FIG = C.ID_FIG WHERE YEAR(C.FECHA_ADQ) = YEAR(GETDATE()) ORDER BY FECHA_ADQ"
+    
+        };
+        return toJSONString(l.selectWithHeaders(querys[value]));
+    }
+    
     public void closeDB(){
         l.close();
     }
@@ -99,8 +121,8 @@ public class DataBaseControl{
         return res+"]";
     }
     
-    public static void main (String... args){
+    /*public static void main (String... args){
         DataBaseControl db = new DataBaseControl();
         System.out.println("\"recent\"="+db.get2(db.COLLECT_FIG, "TOP 5 C.ID_FIG, C.FECHA_ADQ, F.NOM_FIG, F.SUB_NOM, F.SERIAL, F.FACCION", "ORDER BY C.FECHA_ADQ DESC"));
-    }
+    }*/
 }
