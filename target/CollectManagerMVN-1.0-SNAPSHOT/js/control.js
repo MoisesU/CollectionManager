@@ -2,6 +2,7 @@
 
 function init(){
     $("#nClassGroup").hide();
+    $("#nLugarGroup").hide();
     $("#movieGroup").hide();
     $("#clase").val('Deluxe');
     
@@ -28,9 +29,10 @@ function init(){
         $("#serie").html(getSelector(json['SHORT'], json['ID_DET']));
         $("#serie").append("<option value='0'>Otra</option>");
         $("#movie").html(getSelector(json['SERIE'], json['ID']));
+        $("#lugar").html(getSelector(json['PLACE'], json['PLACE']));
+        $("#serie").append("<option value='Other'>Otro</option>");
         prfx = [json['ID_DET'], json['PREFIX']];
     });
-    
     
     $("#clase").on('change', function(evt){
         if($("#clase").val()==='Other'){
@@ -56,6 +58,17 @@ function init(){
         }
     });
     
+    $("#lugar").on('change', function(evt){
+        if($("#lugar").val()==='Other'){
+            $("#nLugarGroup").show();
+            $("#lugarC").attr('name', 'lugar');
+            
+        }
+        else{
+            $("#nLugarGroup").hide();
+            $("#lugarC").attr('name', '');
+        }
+    });
     
     $("#imagen").on('change', function(){
         if (this.files && this.files[0]) {

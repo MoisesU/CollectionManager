@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 'use strict';
 
+var chart = [["Error", 0]];
+
 (function (){
-    
-   $.ajax({
+    $.ajax({
             url: 'rservices/figs/statistics',
             method: 'GET',
             dataType:'json'
@@ -24,11 +24,16 @@
             +"<br>"+json.recent[q]["FECHA_ADQ"]+"</p></div></div></div>";
             $("#recent").append(thumbnail);
         }
+        chart = json["purchases"];
+        $("#total").html("<h2>Valor total: "+new Intl.NumberFormat("es-MX", {style: "currency", currency: "MXN"}).format(json["total"][2])+"</h2>");
+        $("#total").append("<h3>Total de figuras: "+parseInt(json["total"][1], 10)+"</h3>");
+        $("#total").append("<h3>Total de figuras: "+parseInt(json["total"][0], 10)+"</h3>");
         
     }).fail(function(xhr, status, err) {
         console.log('Error al eviar: '+xhr.responseText+'\nError: '+status+"\nStatus: "+xhr.status);
     });
-    
 }());
+
+
 
 

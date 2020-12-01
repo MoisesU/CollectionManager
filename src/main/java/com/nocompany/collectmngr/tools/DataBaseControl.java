@@ -56,6 +56,13 @@ public class DataBaseControl{
         return toJSONString(l.selectColumns(query));
     }
     
+    public String getTotals(){
+        String query = "SELECT SUM(X.PRECIO) AS 'total' FROM (SELECT DISTINCT(SERIAL), PRECIO FROM FIGURAS "
+            + "F INNER JOIN COLECCION C ON F.ID_FIG = C.ID_FIG) X UNION SELECT COUNT(DISTINCT(SERIAL)) "
+            + "FROM FIGURAS UNION SELECT COUNT(*) FROM FIGURAS";
+        return toJSONString(l.selectColumns(query));
+    }
+    
     public void closeDB(){
         l.close();
     }

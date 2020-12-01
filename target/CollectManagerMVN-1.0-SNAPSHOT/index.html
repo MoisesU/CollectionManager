@@ -14,6 +14,45 @@ and open the template in the editor.
         <link href="css/rules.css" rel="stylesheet" type="text/css"/>
         <script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="js/bootstrap.min.js" type="text/javascript"></script>  
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            google.charts.load('current', {packages: ['corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                // Create the data table.
+                var data = new google.visualization.DataTable();
+                $.ajax({ url: 'rservices/figs/statistics',method: 'GET',dataType:'json'})
+                .done(function(json){
+                    chart = json["purchases"];
+                    console.log("exito");
+                    let month = ["Meses", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+
+                    data.addColumn('string', 'Mes');
+                    data.addColumn('number', 'Monto');
+                    //console.log(chart);
+                    for(let i in chart){
+                        console.log("chart: " + [month[chart[i]["MES"]], Number(chart[i]["MONTO"])]);
+                        data.addRow([month[chart[i]["MES"]],  Number(chart[i]["MONTO"])]);
+                    }
+
+                    // Set chart options
+                    var options = {'title':'Gastos por mes',
+                                   'width':600,
+                                   'height':520};
+
+                    // Instantiate and draw our chart, passing in some options.
+                    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                    chart.draw(data, options);
+                })
+                .fail(function(xhr, status, err) {
+                    console.log('Error al eviar: '+xhr.responseText+'\nError: '+status+"\nStatus: "+xhr.status);
+                });
+                
+                
+             }
+        </script>
+        <script src="js/control-stats.js" type="text/javascript"></script>
         <title>Colecci&oacute;n</title>
     </head>
     <body>
@@ -42,13 +81,23 @@ and open the template in the editor.
         
         
         <div class="container">
+            <div class="jumbotron bg-primary" id="total">
+            </div>
+            <hr>
+            <br>
             <h1>Agregadas Recientemente</h1>
+            <hr>
             <br>
             <div class="row" id="recent">
                 <div class="col-md-1 col-sm-1"></div>
             </div>
+            <br>
+            <h1>Estadísticas</h1>
+            <hr>
+            <div class="row">
+                <div id="chart_div"></div>
+            </div>
         </div>
         <script src="https://unpkg.com/notie"></script>
-        <script src="js/control-stats.js" type="text/javascript"></script>
     </body>
 </html>
